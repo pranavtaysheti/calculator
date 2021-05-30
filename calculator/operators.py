@@ -1,53 +1,45 @@
-""" Defining operator super-class """
+""" Operators module """
 
-class Operation():
-    """Operator class
+class Operator():
+    """ Operator class """
 
-    An operator object contains following:
-    Operator like "+", "-", "*", etc.
-    Preceding number
-    Succiding number
-    """
+    pass
 
-    def __init__(self, symbol, left, right) -> None:
-
-        self.left = left
-        self.right = right
-        self.result = None
-
-""" Defining operators """
-
-class Addition(Operation):
+class Addition(Operator):
     
     symbol = "+"
     precedence = 2
+    on_operand = "left"
 
-    def operation(self, left, right):
-        self.result = left + right
+    def operate(self, left, right):
+        return left + right
 
-class Substraction(Operation):
+class Substraction(Operator):
 
     symbol = "-"
     precedence = 2
+    on_operand = "left"
 
-    def operation(self, left, right):
-        self.result = left - right
+    def operate(self, left, right):
+        return left - right
 
-class Multiplication(Operation):
+class Multiplication(Operator):
 
     symbol = "*"
     precedence = 1
+    on_operand = "left"
 
-    def operation(self, left, right):
-        self.result = left * right
+    def operate(self, left, right):
+        return left * right
 
-class Division(Operation):
+class Division(Operator):
 
     symbol = "/"
     precedence = 1
+    on_operand = "left"
 
-    def division(self, left, right):
-        self.result = left / right
+    def operate(self, left, right):
+        return left / right
 
 operators = {
     "+": Addition,
