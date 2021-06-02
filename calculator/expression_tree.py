@@ -83,24 +83,23 @@ class Stack():
         while len(self.operator_stack):
             self._flush_operator()
 
-    def _flush_stack(self, object: operators.Operator):
+    def _flush_stack(self, object: Type[tree.Node]):
         """ Flushes all operators and puts number in right places """
 
-        while object.precedence >= self.operator_stack_precedence: 
+        while object.data.precedence >= self.operator_stack_precedence: 
             self._flush_operator()
 
     def _flush_operator(self):
 
-        operator = self._pop_operator()
-        node = Operation(operator)
+        node = self._pop_operator()
         node.add_child(self.number_stack.pop(), "right")
         node.add_child(self.number_stack.pop(), "left")
         self.number_stack.append(node)
 
-    def _append_operator(self, operator: Type[operators.Operator]):
+    def _append_operator(self, operator: Type[tree.Node]):
 
         self.operator_stack.append(operator)
-        self.operator_stack_precedence = operator.precedence
+        self.operator_stack_precedence = operator.data.precedence
 
     def make(self):
         """ puts the object in right order in result stack """
@@ -113,12 +112,14 @@ class Stack():
 
             elif issubclass(type(object), operators.Operator):
 
-                if object.precedence < self.operator_stack_precedence:
-                    self._append_operator(object)
+                node = Operation(object)
 
-                elif object.precedence >= self.operator_stack_precedence:
-                    self._flush_stack(object)
-                    self._append_operator(object)
+                if node.data.precedence < self.operator_stack_precedence:
+                    self._append_operator(node)
+
+                elif node.data.precedence >= self.operator_stack_precedence:
+                    self._flush_stack(node)
+                    self._append_operator(node)
         
         self._final_flush()
 
