@@ -11,18 +11,17 @@ class Node():
         """
 
         self.data = data
-        self.parent = None
-        self.left = None
-        self.right = None
+        self.left_child: Optional[Node] = None
+        self.right_child: Optional[Node] = None
 
-    def add_child(self, parent: "Node", side: str):
+    def add_child(self, node: "Node", side: str):
         
         side_dict = {
-            "left": self.left,
-            "right": self.right
+            "left": "left_child",
+            "right": "right_child"
         }
 
-        side_dict[side] = self
+        setattr(self, side_dict[side], node)
 
 class Tree():
     """ Each tree represents compiled expression """

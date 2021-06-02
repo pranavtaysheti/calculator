@@ -3,7 +3,9 @@
 class Operator():
     """ Operator class """
 
-    pass
+    def __str__(self):
+        
+        return self.symbol
 
 class Addition(Operator):
     

@@ -1,12 +1,7 @@
 """ Raw Expression Module """
 
-from calculator.expression_tree import ExpressionTree
+import calculator.exceptions as exceptions
 import calculator.operators as operators
-
-class ExpressionError(Exception):
-    """ Is raised when an invalid charecter is found in expression """
-
-    pass
 
 class ExpressionObjectList():
     """ Contains list of expression objects. """
@@ -24,9 +19,11 @@ class ExpressionObjectList():
         """
 
         for char in self.expression_str:
-            self.evaluate_char(char)
+            self._evaluate_char(char)
+        
+        self._flush()
 
-    def flush(self):
+    def _flush(self):
         
         number = 0
         
@@ -34,22 +31,24 @@ class ExpressionObjectList():
             number = number*10 + int(digit)
         
         self.objects.append(number)
-        self.isoperatorallowed = True
+        self.curr = []
 
-    def evaluate_char(self, char: str):
+    def _evaluate_char(self, char: str):
         """ Evaluates character and adds apporpriate object accordingly """
         
-        if not char.isdecimal and char in operators.operators:
+        if not char.isdecimal() and char in operators.operators:
 
             if self.isoperatorallowed:
-                self.flush()
-                self.objects.append(operators.operators[char])
+                self._flush()
+                self.objects.append(operators.operators[char]())
+                self.isoperatorallowed = False
 
             else:
-                raise ExpressionError
+                raise exceptions.ExpressionError
 
-        elif char.isdecimal:
+        elif char.isdecimal():
             self.curr.append(char)
+            self.isoperatorallowed = True
 
         else:
-            raise ExpressionError
+            raise exceptions.ExpressionError
