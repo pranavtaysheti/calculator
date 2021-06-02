@@ -14,6 +14,10 @@ class Node():
         self.left_child: Optional[Node] = None
         self.right_child: Optional[Node] = None
 
+    def __repr__(self):
+        
+        return self.data
+
     def add_child(self, node: "Node", side: str):
         
         side_dict = {
