@@ -1,0 +1,43 @@
+set shell := ["bash", "-cu"]
+
+cc := "clang"
+target := "x86_64-linux-musl"
+
+musl_include := "/usr/local/musl/include"
+musl_lib := "/usr/local/musl/lib"
+
+lib_dir := "./src/lib"
+lib := "./src/lib.a"
+
+warn := "-Wall -Wextra"
+opt := "-O2"
+arch := "-march=x86-64-v3"
+linker := "-fuse-ld=lld"
+static := "-static"
+
+build_dir := "build"
+
+main_file := "src/main.c"
+
+build: build-lib
+    {{cc}} \
+        --target={{target}} \
+        {{static}} \
+        {{linker}} \
+        {{arch}} \
+        {{opt}} \
+        {{warn}} \
+        -I {{lib_dir}} -isystem {{musl_include}} \
+        -L {{musl_lib}} \
+        {{main_file}} \
+        {{lib}} \
+        -o calculator.bin
+
+build-lib:
+    mkdir -p {{build_dir}}
+    for f in {{lib_dir}}/*.c; do \
+        {{cc}} --target={{target}} {{opt}} {{warn}} \
+            -I {{lib_dir}} -isystem {{musl_include}} \
+            -c $$f -o {{build_dir}}/$$(basename $$f .c).o; \
+    done
+    ar rcs {{lib}} {{build_dir}}/*.o
