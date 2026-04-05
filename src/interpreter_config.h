@@ -1,0 +1,1 @@
+#define INTERPRETER_TYPE Number
